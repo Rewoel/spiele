@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rewoel Spiele - Retro</title>
+    <!-- Tailwind CSS CDN für einfaches Styling und Responsivität -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Press Start 2P für einen Retro-Look -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* Grundlegende Stildefinitionen für die Retro-Schriftart und den Hintergrund */
@@ -38,16 +40,21 @@
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <!-- Hauptcontainer für den Inhalt der Seite -->
     <div class="bg-[#4a69bd] p-8 rounded-none shadow-none w-full max-w-4xl text-center game-card">
+        <!-- Überschrift der Website -->
         <h1 class="text-4xl md:text-5xl font-bold text-[#fbc531] mb-8 leading-tight">
             REW<span class="text-[#e84118]">OEL</span> SPIELE
         </h1>
 
+        <!-- Beschreibungstext -->
         <p class="text-md md:text-lg text-[#ecf0f1] mb-12 max-w-2xl mx-auto leading-relaxed">
             WÄHLE DEIN LIEBLINGSSPIEL UND TAUCHE EIN IN DEN SPIELSPASS!
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Raster für die Spielkarten, responsiv gestaltet -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+            <!-- Spielkarte für Schach -->
             <a href="https://rewoel.github.io/schach/" target="_blank"
                class="block bg-[#c0392b] text-white p-6 rounded-none game-card
                       flex flex-col items-center justify-center">
@@ -55,6 +62,7 @@
                 <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
+            <!-- Spielkarte für Kniffel -->
             <a href="https://rewoel.github.io/kniffel/" target="_blank"
                class="block bg-[#27ae60] text-white p-6 rounded-none game-card
                       flex flex-col items-center justify-center">
@@ -62,14 +70,32 @@
                 <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
+            <!-- Spielkarte für 4 Gewinnt -->
             <a href="https://rewoel.github.io/4inarow/" target="_blank"
                class="block bg-[#f39c12] text-white p-6 rounded-none game-card
                       flex flex-col items-center justify-center">
                 <h2 class="text-2xl md:text-3xl font-bold mb-3">4 GEWINNT</h2>
                 <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
+
+            <!-- Spielkarte für Klicker -->
+            <a href="https://rewoel.github.io/klicker/" target="_blank"
+               class="block bg-[#3498db] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">KLICKER</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
+            </a>
+
+            <!-- NEUE Spielkarte für Memory -->
+            <a href="https://rewoel.github.io/memory/" target="_blank"
+               class="block bg-[#e74c3c] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">MEMORY</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
+            </a>
         </div>
 
+        <!-- Optionaler Footer oder zusätzliche Informationen -->
         <p class="mt-12 text-[#bdc3c7] text-sm">
             VIEL SPASS BEIM SPIELEN!
         </p>
