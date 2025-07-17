@@ -458,7 +458,6 @@
         let db;
         let currentUserId = null;
         let isAuthReady = false;
-        let hasAttemptedInitialAuth = false; // Flag to ensure initial auth attempt runs only once
 
         // UI Elements
         const loginPage = document.getElementById('login-page');
@@ -526,7 +525,7 @@
                 auth = getAuth(firebaseApp);
                 db = getFirestore(firebaseApp);
 
-                // Set up auth state listener first and foremost
+                // Set up auth state listener
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         currentUserId = user.uid;
@@ -539,42 +538,14 @@
                         currentUserId = null;
                         userIdDisplay.textContent = 'Nicht angemeldet';
                         isAuthReady = false;
-                        console.log("User not authenticated.");
-
-                        // Only attempt initial sign-in methods if not already attempted
-                        if (!hasAttemptedInitialAuth) {
-                            hasAttemptedInitialAuth = true; // Set flag to true immediately
-                            try {
-                                if (initialAuthToken) {
-                                    console.log("Attempting sign-in with custom token...");
-                                    await signInWithCustomToken(auth, initialAuthToken);
-                                    console.log("Signed in with custom token successfully.");
-                                } else {
-                                    console.log("No custom token found. Attempting anonymous sign-in...");
-                                    await signInAnonymously(auth);
-                                    console.log("Signed in anonymously successfully.");
-                                }
-                            } catch (authError) {
-                                console.error("Automatic sign-in failed:", authError);
-                                let errorMessage = "Anmeldung erforderlich. ";
-                                if (authError.code === 'auth/custom-token-mismatch') {
-                                    errorMessage += "Der bereitgestellte Token ist ungültig. ";
-                                } else if (authError.code === 'auth/admin-restricted-operation') {
-                                    errorMessage += "Die anonyme Authentifizierung ist in Firebase nicht aktiviert. Bitte aktivieren Sie sie in Ihrer Firebase-Konsole.";
-                                }
-                                showMessage(errorMessage, "error");
-                                showPage(loginPage);
-                                showLoginForm();
-                            }
-                        } else {
-                            // If initial auth was attempted and failed, or user signed out, show login
-                            showPage(loginPage);
-                            showLoginForm();
-                        }
+                        console.log("User not authenticated. Showing login page.");
+                        // If no user is authenticated, always show the login page
+                        showPage(loginPage);
+                        showLoginForm();
                     }
                 });
 
-                // Initial display of login page. onAuthStateChanged will redirect if successful.
+                // Initial display of login page. onAuthStateChanged will handle redirection if a user is already authenticated.
                 showPage(loginPage);
                 showLoginForm();
 
@@ -674,60 +645,50 @@
                     profiles.push({ id: doc.id, ...doc.data() });
                 });
 
-                if (profiles.length === 0) {
-                    // If no profiles, create a default one
-                    try {
-                        await addDoc(profilesCollectionRef, {
-                            name: "Main",
-                            avatar: `https://placehold.co/150x150/FF5733/FFFFFF?text=Main`
-                        });
-                        console.log("Default profile created.");
-                    } catch (error) {
-                        console.error("Error creating default profile:", error);
-                        showMessage("Fehler beim Erstellen des Standardprofils.", "error");
-                    }
-                } else {
-                    profiles.forEach(profile => {
-                        const profileCard = document.createElement('div');
-                        profileCard.classList.add('profile-card');
-                        profileCard.dataset.profileId = profile.id; // Store Firestore document ID
-                        profileCard.dataset.profileName = profile.name;
-                        profileCard.innerHTML = `
-                            <img src="${profile.avatar || `https://placehold.co/150x150/CCCCCC/000000?text=${profile.name}`}" alt="Profilbild ${profile.name}" class="rounded-md">
-                            <span>${profile.name}</span>
-                        `;
-                        profileCard.addEventListener('click', () => {
-                            // In a real app, you'd set the active profile here
-                            showMessage(`Willkommen, ${profile.name}!`, "success");
-                            showPage(gameDisplayPage);
-                        });
-                        profilesContainer.appendChild(profileCard);
-                    });
+                // Removed the automatic creation of a "Main" profile.
+                // If profiles.length is 0, only the "Add Profile" card will be shown.
 
-                    // Add "Add Profile" card
-                    const addProfileCard = document.createElement('div');
-                    addProfileCard.classList.add('add-profile-card');
-                    addProfileCard.innerHTML = `
-                        <span class="icon">+</span>
-                        <span>Profil hinzufügen</span>
+                profiles.forEach(profile => {
+                    const profileCard = document.createElement('div');
+                    profileCard.classList.add('profile-card');
+                    profileCard.dataset.profileId = profile.id; // Store Firestore document ID
+                    profileCard.dataset.profileName = profile.name;
+                    profileCard.innerHTML = `
+                        <img src="${profile.avatar || `https://placehold.co/150x150/CCCCCC/000000?text=${profile.name}`}" alt="Profilbild ${profile.name}" class="rounded-md">
+                        <span>${profile.name}</span>
                     `;
-                    addProfileCard.addEventListener('click', async () => {
-                        const newProfileName = prompt("Bitte geben Sie einen Namen für das neue Profil ein:");
-                        if (newProfileName) {
-                            try {
-                                await addDoc(profilesCollectionRef, {
-                                    name: newProfileName,
-                                    avatar: `https://placehold.co/150x150/${Math.floor(Math.random()*16777215).toString(16)}/FFFFFF?text=${newProfileName.substring(0,1).toUpperCase()}`
-                                });
-                                showMessage("Profil erfolgreich hinzugefügt!", "success");
-                            } catch (error) {
-                                console.error("Error adding profile:", error);
-                                showMessage("Fehler beim Hinzufügen des Profils.", "error");
-                            }
-                        }
+                    profileCard.addEventListener('click', () => {
+                        // In a real app, you'd set the active profile here
+                        showMessage(`Willkommen, ${profile.name}!`, "success");
+                        showPage(gameDisplayPage);
                     });
-                    profilesContainer.appendChild(addProfileCard);
-                }
+                    profilesContainer.appendChild(profileCard);
+                });
+
+                // Add "Add Profile" card (always present)
+                const addProfileCard = document.createElement('div');
+                addProfileCard.classList.add('add-profile-card');
+                addProfileCard.innerHTML = `
+                    <span class="icon">+</span>
+                    <span>Profil hinzufügen</span>
+                `;
+                addProfileCard.addEventListener('click', async () => {
+                    const newProfileName = prompt("Bitte geben Sie einen Namen für das neue Profil ein:");
+                    if (newProfileName) {
+                        try {
+                            await addDoc(profilesCollectionRef, {
+                                name: newProfileName,
+                                avatar: `https://placehold.co/150x150/${Math.floor(Math.random()*16777215).toString(16)}/FFFFFF?text=${newProfileName.substring(0,1).toUpperCase()}`
+                            });
+                            showMessage("Profil erfolgreich hinzugefügt!", "success");
+                        } catch (error) {
+                            console.error("Error adding profile:", error);
+                            showMessage("Fehler beim Hinzufügen des Profils.", "error");
+                        }
+                    }
+                });
+                profilesContainer.appendChild(addProfileCard);
+                
                 showPage(profileSelectionPage); // Show profile selection once loaded
             }, (error) => {
                 console.error("Error listening to profiles:", error);
