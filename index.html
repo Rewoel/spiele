@@ -3,1019 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rewoel Spiele - Netflix Style</title>
+    <title>Rewoel Spiele - Retro</title>
     <!-- Tailwind CSS CDN für einfaches Styling und Responsivität -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter für eine moderne, saubere Schriftart -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Press Start 2P für einen Retro-Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        /* Grundlegende Stildefinitionen für den Netflix-Look */
+        /* Grundlegende Stildefinitionen für die Retro-Schriftart und den Hintergrund */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #141414; /* Netflix-ähnlicher dunkler Hintergrund */
-            color: #e5e5e5; /* Helle Textfarbe */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden; /* Verhindert horizontales Scrollen */
+            font-family: 'Press Start 2P', cursive; /* Retro-Schriftart */
+            background-color: #2c3e50; /* Dunkler, leicht bläulicher Hintergrund */
+            background-image:
+                repeating-linear-gradient(0deg, #34495e, #34495e 1px, transparent 1px, transparent 2px),
+                repeating-linear-gradient(90deg, #34495e, #34495e 1px, transparent 1px, transparent 2px);
+            background-size: 2px 2px; /* Subtiles Pixelmuster */
+            color: #ecf0f1; /* Helle Textfarbe */
         }
 
-        /* Netflix-spezifische Farben */
-        .netflix-red {
-            color: #e50914;
+        /* Allgemeine Stilkorrekturen für die Retro-Schriftart */
+        h1, h2 {
+            text-shadow: 4px 4px 0px #1a252f; /* Pixeliger Schatten für Überschriften */
         }
 
-        .netflix-bg-red {
-            background-color: #e50914;
-        }
-
-        /* Allgemeine Button-Stile im Netflix-Look */
-        .netflix-button {
-            background-color: #e50914;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            cursor: pointer;
-            border: none;
-        }
-
-        .netflix-button:hover {
-            background-color: #f40612;
-            transform: translateY(-1px);
-        }
-
-        /* Profilkarten-Stile */
-        .profile-card {
-            background-color: #141414;
-            border-radius: 4px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s ease, filter 0.2s ease;
-            text-align: center;
-            width: 150px; /* Feste Breite für Profilkarten */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile-card:hover {
-            transform: scale(1.05);
-            filter: brightness(1.2);
-        }
-
-        .profile-card img {
-            width: 100%;
-            height: 150px; /* Feste Höhe für Profilbilder */
-            object-fit: cover;
-            border-radius: 4px;
-            border: 3px solid transparent;
-            transition: border-color 0.2s ease;
-        }
-
-        .profile-card:hover img {
-            border-color: #e5e5e5;
-        }
-
-        .profile-card span {
-            display: block;
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #e5e5e5;
-            transition: color 0.2s ease;
-        }
-
-        .profile-card:hover span {
-            color: #e50914;
-        }
-
-        /* "Profil hinzufügen" Karte */
-        .add-profile-card {
-            background-color: #333;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-            width: 150px;
-            height: 150px;
-        }
-
-        .add-profile-card:hover {
-            transform: scale(1.05);
-            background-color: #444;
-        }
-
-        .add-profile-card .icon {
-            font-size: 4em;
-            color: #e5e5e5;
-        }
-
-        .add-profile-card span {
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #e5e5e5;
-        }
-
-        /* Login-Formular spezifische Stile */
-        .login-container {
-            background-color: rgba(0, 0, 0, 0.75);
-            padding: 60px 68px 40px;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        .login-container h1 {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 28px;
-            text-align: left;
-        }
-
-        .login-container input[type="email"],
-        .login-container input[type="password"] {
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            box-sizing: border-box; /* Stellt sicher, dass Padding und Border in der Breite enthalten sind */
-        }
-
-        .login-container input::placeholder {
-            color: #8c8c8c;
-        }
-
-        .login-help {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85em;
-            color: #b3b3b3;
-            margin-bottom: 20px;
-        }
-
-        .login-help input[type="checkbox"] {
-            margin-right: 5px;
-        }
-
-        .login-signup {
-            margin-top: 60px;
-            color: #8c8c8c;
-            font-size: 1.1em;
-            text-align: left;
-        }
-
-        .login-signup a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .login-signup a:hover {
-            text-decoration: underline;
-        }
-
-        .login-recaptcha {
-            font-size: 0.8em;
-            color: #8c8c8c;
-            text-align: left;
-            margin-top: 10px;
-        }
-
-        .login-recaptcha a {
-            color: #0071eb;
-            text-decoration: none;
-        }
-
-        .login-recaptcha a:hover {
-            text-decoration: underline;
-        }
-
-        /* Spielkarten-Stile (angepasst an Netflix-Look) */
+        /* Stil für die Spielkarten, um sie wie Arcade-Buttons aussehen zu lassen */
         .game-card {
-            background-color: #222; /* Etwas heller als der Hintergrund */
-            border-radius: 8px; /* Leicht abgerundete Ecken */
-            overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            border: 4px solid #1a252f; /* Dicke, dunkle Ränder */
+            box-shadow: 8px 8px 0px #1a252f; /* Pixeliger Schatten für die Karten */
+            transition: all 0.1s ease-in-out; /* Schnellere, "klickende" Transition */
+            cursor: pointer; /* Zeigt an, dass es klickbar ist */
         }
 
         .game-card:hover {
-            transform: translateY(-5px); /* Leichter "Pop-up"-Effekt */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Deutlicherer Schatten */
-        }
-
-        .game-card h2 {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #e5e5e5;
-            margin-bottom: 10px;
-        }
-
-        .game-card p {
-            font-size: 0.9em;
-            color: #b3b3b3;
-        }
-
-        /* Anpassung für kleinere Bildschirme */
-        @media (max-width: 768px) {
-            .login-container {
-                padding: 40px 30px 20px;
-                margin: 20px;
-            }
-            .profile-card, .add-profile-card {
-                width: 120px;
-                height: 120px;
-            }
-            .profile-card img {
-                height: 120px;
-            }
-            .profile-card span, .add-profile-card span {
-                font-size: 0.9em;
-            }
-            .add-profile-card .icon {
-                font-size: 3em;
-            }
-            .game-card h2 {
-                font-size: 1.5em;
-            }
-            .game-card p {
-                font-size: 0.8em;
-            }
-        }
-
-        /* Message Box Style */
-        #message-box {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #e50914;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            display: none; /* Hidden by default */
-            font-weight: bold;
-            text-align: center;
-        }
-
-        /* Profile Management Modal Styles */
-        .profile-management-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); /* Slightly darker overlay */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100; /* Above other content but below message box */
-        }
-
-        .profile-management-content {
-            background-color: #1a1a1a; /* Darker background for the modal content */
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-            width: 90%;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .profile-management-content h2 {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: #e5e5e5;
-        }
-
-        .profile-management-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .managed-profile-card {
-            background-color: #222;
-            border-radius: 4px;
-            padding: 15px;
-            width: 180px; /* Slightly larger for management */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        .managed-profile-card img {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .managed-profile-card .profile-name-display {
-            font-size: 1.1em;
-            color: #e5e5e5;
-            margin-bottom: 10px;
-        }
-
-        .managed-profile-card .edit-input {
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 8px 12px;
-            width: calc(100% - 24px); /* Adjust for padding */
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .managed-profile-card .action-buttons button {
-            background-color: #e50914;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 4px;
-            font-size: 0.9em;
-            margin: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            border: none;
-        }
-
-        .managed-profile-card .action-buttons button:hover {
-            background-color: #f40612;
-        }
-
-        .managed-profile-card .delete-btn {
-            background-color: #6a0000; /* Darker red for delete */
-        }
-
-        .managed-profile-card .delete-btn:hover {
-            background-color: #8b0000;
-        }
-
-        /* Confirmation Modal Styles */
-        .confirmation-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 101; /* Above profile management modal */
-        }
-
-        .confirmation-content {
-            background-color: #222;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-            text-align: center;
-            max-width: 400px;
-            color: #e5e5e5;
-        }
-
-        .confirmation-content p {
-            margin-bottom: 20px;
-            font-size: 1.1em;
-        }
-
-        .confirmation-content button {
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 10px;
-            border: none;
-            transition: background-color 0.2s ease;
-        }
-
-        .confirmation-content .confirm-yes {
-            background-color: #e50914;
-            color: white;
-        }
-
-        .confirmation-content .confirm-yes:hover {
-            background-color: #f40612;
-        }
-
-        .confirmation-content .confirm-no {
-            background-color: #555;
-            color: white;
-        }
-
-        .confirmation-content .confirm-no:hover {
-            background-color: #777;
+            transform: translate(4px, 4px); /* Verschiebung beim Hover, um den "Klick" zu simulieren */
+            box-shadow: 4px 4px 0px #1a252f; /* Kleinerer Schatten beim Hover */
         }
     </style>
 </head>
-<body>
-
-    <!-- Message Box for alerts/errors -->
-    <div id="message-box" role="alert"></div>
-
-    <!-- Login-Seite -->
-    <div id="login-page" class="login-container">
-        <!-- Netflix Logo Placeholder -->
-        <div class="mb-8 text-left">
-            <span class="text-5xl font-bold netflix-red">REW<span class="text-white">OEL</span></span>
-        </div>
-        
-        <!-- Login Form -->
-        <div id="login-form-section">
-            <h1 class="text-left">Anmelden</h1>
-            <form id="login-form">
-                <input type="email" id="login-email" placeholder="E-Mail-Adresse" required class="rounded-md">
-                <input type="password" id="login-password" placeholder="Passwort" required class="rounded-md">
-                <button type="submit" class="netflix-button w-full mt-6 mb-4">Anmelden</button>
-                <div class="login-help">
-                    <div>
-                        <input type="checkbox" id="remember-me" class="mr-2">
-                        <label for="remember-me">Angemeldet bleiben</label>
-                    </div>
-                    <a href="#" class="text-sm hover:underline">Hilfe benötigt?</a>
-                </div>
-            </form>
-            <div class="login-signup">
-                Neu bei Rewoel Spiele? <a href="#" id="show-register-form" class="hover:underline">Jetzt registrieren.</a>
-            </div>
-        </div>
-
-        <!-- Register Form (initially hidden) -->
-        <div id="register-form-section" class="hidden">
-            <h1 class="text-left">Registrieren</h1>
-            <form id="register-form">
-                <input type="email" id="register-email" placeholder="E-Mail-Adresse" required class="rounded-md">
-                <input type="password" id="register-password" placeholder="Passwort (min. 6 Zeichen)" required class="rounded-md">
-                <input type="password" id="register-password-confirm" placeholder="Passwort bestätigen" required class="rounded-md">
-                <button type="submit" class="netflix-button w-full mt-6 mb-4">Registrieren</button>
-            </form>
-            <div class="login-signup">
-                Bereits registriert? <a href="#" id="show-login-form" class="hover:underline">Jetzt anmelden.</a>
-            </div>
-        </div>
-
-        <div class="login-recaptcha">
-            Diese Seite ist durch Google reCAPTCHA geschützt, um zu gewährleisten, dass Sie kein Bot sind. <a href="#" class="hover:underline">Mehr erfahren.</a>
-        </div>
-    </div>
-
-    <!-- Profilauswahl-Seite -->
-    <div id="profile-selection" class="hidden w-full max-w-4xl text-center p-8">
-        <h1 class="text-4xl md:text-5xl font-bold mb-12">Wer spielt gerade?</h1>
-        <div id="profiles-container" class="flex flex-wrap justify-center gap-8">
-            <!-- Profile werden hier dynamisch geladen -->
-        </div>
-        <button id="manage-profiles-btn" class="netflix-button mt-12 px-8 py-3 text-lg border border-gray-500 bg-transparent hover:border-white hover:bg-transparent text-gray-400 hover:text-white">Profile verwalten</button>
-        <div class="mt-4 text-gray-500 text-sm">
-            Deine Nutzer-ID: <span id="user-id-display" class="font-mono text-gray-400">Lade...</span>
-        </div>
-    </div>
-
-    <!-- Spielanzeige-Seite -->
-    <div id="game-display" class="hidden w-full max-w-6xl p-8">
-        <!-- Header für die Spielanzeige -->
-        <div class="flex justify-between items-center mb-8">
-            <span class="text-4xl font-bold netflix-red">REW<span class="text-white">OEL</span></span>
-            <button id="back-to-profiles-btn" class="netflix-button bg-transparent border border-gray-500 hover:border-white text-gray-400 hover:text-white px-4 py-2 text-sm">Profile wechseln</button>
-        </div>
-
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight text-center">
-            WÄHLE DEIN LIEBLINGSSPIEL!
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+    <!-- Hauptcontainer für den Inhalt der Seite -->
+    <div class="bg-[#4a69bd] p-8 rounded-none shadow-none w-full max-w-4xl text-center game-card">
+        <!-- Überschrift der Website -->
+        <h1 class="text-4xl md:text-5xl font-bold text-[#fbc531] mb-8 leading-tight">
+            REW<span class="text-[#e84118]">OEL</span> SPIELE
         </h1>
-        <p class="text-md md:text-lg text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed text-center">
-            Tauche ein in eine Welt voller spannender Abenteuer und klassischer Herausforderungen.
+
+        <!-- Beschreibungstext -->
+        <p class="text-md md:text-lg text-[#ecf0f1] mb-12 max-w-2xl mx-auto leading-relaxed">
+            WÄHLE DEIN LIEBLINGSSPIEL UND TAUCHE EIN IN DEN SPIELSPASS!
         </p>
 
-        <!-- Raster für die Spielkarten -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Raster für die Spielkarten, responsiv gestaltet -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <!-- Spielkarte für Schach -->
             <a href="https://rewoel.github.io/schach/" target="_blank"
-               class="game-card">
-                <h2>SCHACH</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#c0392b] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">SCHACH</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für Kniffel -->
             <a href="https://rewoel.github.io/kniffel/" target="_blank"
-               class="game-card">
-                <h2>KNIFFEL</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#27ae60] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">KNIFFEL</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für 4 Gewinnt -->
             <a href="https://rewoel.github.io/4inarow/" target="_blank"
-               class="game-card">
-                <h2>4 GEWINNT</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#f39c12] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">4 GEWINNT</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für Klicker -->
             <a href="https://rewoel.github.io/klicker/" target="_blank"
-               class="game-card">
-                <h2>KLICKER</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#3498db] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">KLICKER</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für Memory -->
             <a href="https://rewoel.github.io/memory/" target="_blank"
-               class="game-card">
-                <h2>MEMORY</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#e74c3c] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">MEMORY</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für Click of Death -->
             <a href="https://rewoel.github.io/clickofdeath/" target="_blank"
-               class="game-card">
-                <h2>CLICK OF DEATH</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#6c5ce7] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">CLICK OF DEATH</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für 4 Gewinnt V.2 -->
             <a href="https://rewoel.github.io/4inarowmp//" target="_blank"
-               class="game-card">
-                <h2>4 GEWINNT V.2</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#a29bfe] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">4 GEWINNT V.2</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- Spielkarte für Crowd Runner -->
             <a href="https://rewoel.github.io/crowdrunner/" target="_blank"
-               class="game-card">
-                <h2>CROWD RUNNER</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#00b894] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">CROWD RUNNER</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
 
             <!-- NEUE Spielkarte für Jump & Run -->
             <a href="https://rewoel.github.io/jumpnrun/" target="_blank"
-               class="game-card">
-                <h2>JUMP & RUN</h2>
-                <p>KLICKE HIER, UM ZU SPIELEN!</p>
+               class="block bg-[#ff6348] text-white p-6 rounded-none game-card
+                      flex flex-col items-center justify-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">JUMP & RUN</h2>
+                <p class="text-xs md:text-sm opacity-90">KLICKE HIER, UM ZU SPIELEN!</p>
             </a>
         </div>
 
         <!-- Optionaler Footer oder zusätzliche Informationen -->
-        <p class="mt-12 text-gray-500 text-sm text-center">
+        <p class="mt-12 text-[#bdc3c7] text-sm">
             VIEL SPASS BEIM SPIELEN!
         </p>
     </div>
-
-    <!-- Profile Management Modal -->
-    <div id="profile-management-modal" class="profile-management-modal hidden">
-        <div class="profile-management-content">
-            <h2>Profile verwalten</h2>
-            <div id="managed-profiles-list" class="profile-management-list">
-                <!-- Managed profiles will be loaded here -->
-            </div>
-            <button id="done-managing-profiles-btn" class="netflix-button mt-8 px-8 py-3 text-lg">Fertig</button>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="confirmation-modal hidden">
-        <div class="confirmation-content">
-            <p id="confirmation-message"></p>
-            <button id="confirm-yes-btn" class="confirm-yes">Ja</button>
-            <button id="confirm-no-btn" class="confirm-no">Nein</button>
-        </div>
-    </div>
-
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, query, getDocs, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-        // Your provided Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyALtSzCeb4UvjFlV-EKO84_aL03cvAgn7s",
-            authDomain: "rewoel.firebaseapp.com",
-            projectId: "rewoel",
-            storageBucket: "rewoel.firebasestorage.app",
-            messagingSenderId: "455819201623",
-            appId: "1:455819201623:web:47308b8327fc9669e06712",
-            measurementId: "G-W0ND5RMZYL"
-        };
-        // Use projectId from firebaseConfig as the appId for Firestore paths,
-        // or __app_id if available (for Canvas environment).
-        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
-
-        // The __initial_auth_token is provided by the Canvas environment, if available.
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let firebaseApp;
-        let auth;
-        let db;
-        let currentUserId = null;
-        let isAuthReady = false;
-
-        // UI Elements
-        const loginPage = document.getElementById('login-page');
-        const profileSelectionPage = document.getElementById('profile-selection');
-        const gameDisplayPage = document.getElementById('game-display');
-
-        const loginFormSection = document.getElementById('login-form-section');
-        const registerFormSection = document.getElementById('register-form-section');
-        const showRegisterFormLink = document.getElementById('show-register-form');
-        const showLoginFormLink = document.getElementById('show-login-form');
-
-        const loginForm = document.getElementById('login-form');
-        const loginEmailInput = document.getElementById('login-email');
-        const loginPasswordInput = document.getElementById('login-password');
-        
-        const registerForm = document.getElementById('register-form');
-        const registerEmailInput = document.getElementById('register-email');
-        const registerPasswordInput = document.getElementById('register-password');
-        const registerPasswordConfirmInput = document.getElementById('register-password-confirm');
-
-        const profilesContainer = document.getElementById('profiles-container');
-        const manageProfilesBtn = document.getElementById('manage-profiles-btn');
-        const backToProfilesBtn = document.getElementById('back-to-profiles-btn');
-        const userIdDisplay = document.getElementById('user-id-display');
-        const messageBox = document.getElementById('message-box');
-
-        // Profile Management Modal Elements
-        const profileManagementModal = document.getElementById('profile-management-modal');
-        const managedProfilesList = document.getElementById('managed-profiles-list');
-        const doneManagingProfilesBtn = document.getElementById('done-managing-profiles-btn');
-
-        // Confirmation Modal Elements
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const confirmationMessage = document.getElementById('confirmation-message');
-        const confirmYesBtn = document.getElementById('confirm-yes-btn');
-        const confirmNoBtn = document.getElementById('confirm-no-btn');
-
-        // Function to show messages in a custom box
-        function showMessage(message, type = 'error') {
-            messageBox.textContent = message;
-            messageBox.style.backgroundColor = type === 'error' ? '#e50914' : '#28a745'; // Red for error, green for success
-            messageBox.style.display = 'block';
-            setTimeout(() => {
-                messageBox.style.display = 'none';
-            }, 3000); // Hide after 3 seconds
-        }
-
-        // Function to show a specific page and hide others
-        function showPage(pageToShow) {
-            loginPage.classList.add('hidden');
-            profileSelectionPage.classList.add('hidden');
-            gameDisplayPage.classList.add('hidden');
-            // Hide modals when switching main pages
-            profileManagementModal.classList.add('hidden');
-            confirmationModal.classList.add('hidden');
-            pageToShow.classList.remove('hidden');
-        }
-
-        // Function to toggle between login and registration forms
-        function showLoginForm() {
-            loginFormSection.classList.remove('hidden');
-            registerFormSection.classList.add('hidden');
-            loginEmailInput.value = ''; // Clear fields
-            loginPasswordInput.value = '';
-        }
-
-        function showRegisterForm() {
-            loginFormSection.classList.add('hidden');
-            registerFormSection.classList.remove('hidden');
-            registerEmailInput.value = ''; // Clear fields
-            registerPasswordInput.value = '';
-            registerPasswordConfirmInput.value = '';
-        }
-
-        // Initialize Firebase and set up authentication listener
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                firebaseApp = initializeApp(firebaseConfig);
-                auth = getAuth(firebaseApp);
-                db = getFirestore(firebaseApp);
-
-                // Set up auth state listener
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        currentUserId = user.uid;
-                        userIdDisplay.textContent = currentUserId; // Display full userId
-                        isAuthReady = true;
-                        console.log("User authenticated:", currentUserId);
-                        // Once authenticated, load profiles
-                        loadUserProfiles(currentUserId);
-                    } else {
-                        currentUserId = null;
-                        userIdDisplay.textContent = 'Nicht angemeldet';
-                        isAuthReady = false;
-                        console.log("User not authenticated. Showing login page.");
-                        // If no user is authenticated, always show the login page
-                        showPage(loginPage);
-                        showLoginForm();
-                    }
-                });
-
-                // Initial display of login page. onAuthStateChanged will handle redirection if a user is already authenticated.
-                showPage(loginPage);
-                showLoginForm();
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                showMessage("Fehler beim Initialisieren der App. Bitte versuchen Sie es später erneut.", "error");
-                showPage(loginPage);
-                showLoginForm();
-            }
-        });
-
-        // Handle login form submission
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = loginEmailInput.value;
-            const password = loginPasswordInput.value;
-
-            try {
-                // Sign in with email and password
-                await signInWithEmailAndPassword(auth, email, password);
-                showMessage("Erfolgreich angemeldet!", "success");
-                // onAuthStateChanged will handle page transition
-            } catch (error) {
-                console.error("Login failed:", error);
-                let errorMessage = "Anmeldung fehlgeschlagen. ";
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-                    errorMessage += "Ungültige E-Mail oder Passwort.";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage += "Ungültiges E-Mail-Format.";
-                } else {
-                    errorMessage += "Bitte versuchen Sie es erneut.";
-                }
-                showMessage(errorMessage, "error");
-            }
-        });
-
-        // Handle registration form submission
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = registerEmailInput.value;
-            const password = registerPasswordInput.value;
-            const passwordConfirm = registerPasswordConfirmInput.value;
-
-            if (password !== passwordConfirm) {
-                showMessage("Passwörter stimmen nicht überein.", "error");
-                return;
-            }
-
-            try {
-                // Create user with email and password
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                showMessage("Registrierung erfolgreich! Sie sind jetzt angemeldet.", "success");
-                // onAuthStateChanged will handle page transition and profile loading
-            } catch (error) {
-                console.error("Registration failed:", error);
-                let errorMessage = "Registrierung fehlgeschlagen. ";
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage += "Diese E-Mail-Adresse wird bereits verwendet.";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage += "Ungültiges E-Mail-Format.";
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage += "Das Passwort ist zu schwach (mindestens 6 Zeichen erforderlich).";
-                } else {
-                    errorMessage += "Bitte versuchen Sie es erneut.";
-                }
-                showMessage(errorMessage, "error");
-            }
-        });
-
-        // Event listeners for toggling forms
-        showRegisterFormLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showRegisterForm();
-        });
-
-        showLoginFormLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showLoginForm();
-        });
-
-        // Function to load and display user profiles from Firestore
-        async function loadUserProfiles(userId) {
-            if (!isAuthReady || !userId) {
-                console.log("Auth not ready or userId missing, cannot load profiles.");
-                return;
-            }
-
-            // Path for private user profiles
-            const profilesCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/profiles`);
-
-            // Listen for real-time updates to profiles
-            onSnapshot(profilesCollectionRef, async (snapshot) => {
-                profilesContainer.innerHTML = ''; // Clear existing profiles
-                const profiles = [];
-                snapshot.forEach(doc => {
-                    profiles.push({ id: doc.id, ...doc.data() });
-                });
-
-                profiles.forEach(profile => {
-                    const profileCard = document.createElement('div');
-                    profileCard.classList.add('profile-card');
-                    profileCard.dataset.profileId = profile.id; // Store Firestore document ID
-                    profileCard.dataset.profileName = profile.name;
-                    profileCard.innerHTML = `
-                        <img src="${profile.avatar || `https://placehold.co/150x150/CCCCCC/000000?text=${profile.name}`}" alt="Profilbild ${profile.name}" class="rounded-md">
-                        <span>${profile.name}</span>
-                    `;
-                    profileCard.addEventListener('click', () => {
-                        // In a real app, you'd set the active profile here
-                        showMessage(`Willkommen, ${profile.name}!`, "success");
-                        showPage(gameDisplayPage);
-                    });
-                    profilesContainer.appendChild(profileCard);
-                });
-
-                // Add "Add Profile" card (always present)
-                const addProfileCard = document.createElement('div');
-                addProfileCard.classList.add('add-profile-card');
-                addProfileCard.innerHTML = `
-                    <span class="icon">+</span>
-                    <span>Profil hinzufügen</span>
-                `;
-                addProfileCard.addEventListener('click', async () => {
-                    const newProfileName = prompt("Bitte geben Sie einen Namen für das neue Profil ein:");
-                    if (newProfileName) {
-                        try {
-                            await addDoc(profilesCollectionRef, {
-                                name: newProfileName,
-                                avatar: `https://placehold.co/150x150/${Math.floor(Math.random()*16777215).toString(16)}/FFFFFF?text=${newProfileName.substring(0,1).toUpperCase()}`
-                            });
-                            showMessage("Profil erfolgreich hinzugefügt!", "success");
-                        } catch (error) {
-                            console.error("Error adding profile:", error);
-                            showMessage("Fehler beim Hinzufügen des Profils.", "error");
-                        }
-                    }
-                });
-                profilesContainer.appendChild(addProfileCard);
-                
-                showPage(profileSelectionPage); // Show profile selection once loaded
-            }, (error) => {
-                console.error("Error listening to profiles:", error);
-                showMessage("Fehler beim Laden der Profile.", "error");
-            });
-        }
-
-        // Function to load and display profiles in the management modal
-        async function loadManagedProfiles() {
-            if (!isAuthReady || !currentUserId) {
-                showMessage("Sie müssen angemeldet sein, um Profile zu verwalten.", "error");
-                return;
-            }
-
-            const profilesCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/profiles`);
-            const querySnapshot = await getDocs(profilesCollectionRef); // Fetch current profiles once
-
-            managedProfilesList.innerHTML = ''; // Clear existing profiles in modal
-
-            querySnapshot.forEach(doc => {
-                const profile = { id: doc.id, ...doc.data() };
-                const managedProfileCard = document.createElement('div');
-                managedProfileCard.classList.add('managed-profile-card');
-                managedProfileCard.dataset.profileId = profile.id;
-
-                managedProfileCard.innerHTML = `
-                    <img src="${profile.avatar || `https://placehold.co/120x120/CCCCCC/000000?text=${profile.name}`}" alt="Profilbild ${profile.name}" class="rounded-md">
-                    <span class="profile-name-display">${profile.name}</span>
-                    <input type="text" class="edit-input hidden" value="${profile.name}">
-                    <div class="action-buttons mt-2">
-                        <button class="edit-btn">Bearbeiten</button>
-                        <button class="delete-btn">Löschen</button>
-                    </div>
-                `;
-
-                const editBtn = managedProfileCard.querySelector('.edit-btn');
-                const deleteBtn = managedProfileCard.querySelector('.delete-btn');
-                const profileNameDisplay = managedProfileCard.querySelector('.profile-name-display');
-                const editInput = managedProfileCard.querySelector('.edit-input');
-
-                // Edit button logic
-                editBtn.addEventListener('click', async () => {
-                    if (editBtn.textContent === 'Bearbeiten') {
-                        profileNameDisplay.classList.add('hidden');
-                        editInput.classList.remove('hidden');
-                        editInput.focus();
-                        editBtn.textContent = 'Speichern';
-                    } else { // Save button clicked
-                        const newName = editInput.value.trim();
-                        if (newName && newName !== profile.name) {
-                            try {
-                                const profileDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profiles`, profile.id);
-                                await updateDoc(profileDocRef, { name: newName });
-                                showMessage("Profilname aktualisiert!", "success");
-                            } catch (error) {
-                                console.error("Error updating profile name:", error);
-                                showMessage("Fehler beim Aktualisieren des Profilnamens.", "error");
-                            }
-                        }
-                        profileNameDisplay.textContent = newName;
-                        profileNameDisplay.classList.remove('hidden');
-                        editInput.classList.add('hidden');
-                        editBtn.textContent = 'Bearbeiten';
-                    }
-                });
-
-                // Delete button logic
-                deleteBtn.addEventListener('click', () => {
-                    showConfirmation("Möchten Sie dieses Profil wirklich löschen? Dies kann nicht rückgängig gemacht werden.", async (confirmed) => {
-                        if (confirmed) {
-                            try {
-                                const profileDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profiles`, profile.id);
-                                await deleteDoc(profileDocRef);
-                                showMessage("Profil erfolgreich gelöscht!", "success");
-                                // No need to manually remove from DOM, onSnapshot will refresh
-                            } catch (error) {
-                                console.error("Error deleting profile:", error);
-                                showMessage("Fehler beim Löschen des Profils.", "error");
-                            }
-                        }
-                    });
-                });
-
-                managedProfilesList.appendChild(managedProfileCard);
-            });
-        }
-
-        // Custom Confirmation Modal
-        let confirmCallback = null;
-        function showConfirmation(message, callback) {
-            confirmationMessage.textContent = message;
-            confirmCallback = callback;
-            confirmationModal.classList.remove('hidden');
-        }
-
-        confirmYesBtn.addEventListener('click', () => {
-            if (confirmCallback) {
-                confirmCallback(true);
-            }
-            confirmationModal.classList.add('hidden');
-            confirmCallback = null;
-        });
-
-        confirmNoBtn.addEventListener('click', () => {
-            if (confirmCallback) {
-                confirmCallback(false);
-            }
-            confirmationModal.classList.add('hidden');
-            confirmCallback = null;
-        });
-
-
-        // Event-Listener für den "Profile verwalten" Button
-        if (manageProfilesBtn) {
-            manageProfilesBtn.addEventListener('click', () => {
-                if (currentUserId) {
-                    loadManagedProfiles(); // Load profiles specifically for management
-                    profileManagementModal.classList.remove('hidden');
-                } else {
-                    showMessage("Bitte melden Sie sich zuerst an, um Profile zu verwalten.", "info");
-                }
-            });
-        }
-
-        // Event-Listener für den "Fertig" Button im Profilverwaltungs-Modal
-        if (doneManagingProfilesBtn) {
-            doneManagingProfilesBtn.addEventListener('click', () => {
-                profileManagementModal.classList.add('hidden');
-                // Reload main profiles list to reflect any changes
-                if (currentUserId) {
-                    loadUserProfiles(currentUserId);
-                }
-            });
-        }
-
-        // Event-Listener für den "Profile wechseln" Button auf der Spielanzeige-Seite
-        if (backToProfilesBtn) {
-            backToProfilesBtn.addEventListener('click', () => {
-                showPage(profileSelectionPage);
-            });
-        }
-    </script>
 </body>
 </html>
