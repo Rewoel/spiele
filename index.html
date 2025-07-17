@@ -278,6 +278,162 @@
             font-weight: bold;
             text-align: center;
         }
+
+        /* Profile Management Modal Styles */
+        .profile-management-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* Slightly darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100; /* Above other content but below message box */
+        }
+
+        .profile-management-content {
+            background-color: #1a1a1a; /* Darker background for the modal content */
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .profile-management-content h2 {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #e5e5e5;
+        }
+
+        .profile-management-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .managed-profile-card {
+            background-color: #222;
+            border-radius: 4px;
+            padding: 15px;
+            width: 180px; /* Slightly larger for management */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .managed-profile-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .managed-profile-card .profile-name-display {
+            font-size: 1.1em;
+            color: #e5e5e5;
+            margin-bottom: 10px;
+        }
+
+        .managed-profile-card .edit-input {
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            width: calc(100% - 24px); /* Adjust for padding */
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .managed-profile-card .action-buttons button {
+            background-color: #e50914;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            border: none;
+        }
+
+        .managed-profile-card .action-buttons button:hover {
+            background-color: #f40612;
+        }
+
+        .managed-profile-card .delete-btn {
+            background-color: #6a0000; /* Darker red for delete */
+        }
+
+        .managed-profile-card .delete-btn:hover {
+            background-color: #8b0000;
+        }
+
+        /* Confirmation Modal Styles */
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 101; /* Above profile management modal */
+        }
+
+        .confirmation-content {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            max-width: 400px;
+            color: #e5e5e5;
+        }
+
+        .confirmation-content p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .confirmation-content button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            border: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .confirmation-content .confirm-yes {
+            background-color: #e50914;
+            color: white;
+        }
+
+        .confirmation-content .confirm-yes:hover {
+            background-color: #f40612;
+        }
+
+        .confirmation-content .confirm-no {
+            background-color: #555;
+            color: white;
+        }
+
+        .confirmation-content .confirm-no:hover {
+            background-color: #777;
+        }
     </style>
 </head>
 <body>
@@ -430,11 +586,31 @@
         </p>
     </div>
 
+    <!-- Profile Management Modal -->
+    <div id="profile-management-modal" class="profile-management-modal hidden">
+        <div class="profile-management-content">
+            <h2>Profile verwalten</h2>
+            <div id="managed-profiles-list" class="profile-management-list">
+                <!-- Managed profiles will be loaded here -->
+            </div>
+            <button id="done-managing-profiles-btn" class="netflix-button mt-8 px-8 py-3 text-lg">Fertig</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="confirmation-modal hidden">
+        <div class="confirmation-content">
+            <p id="confirmation-message"></p>
+            <button id="confirm-yes-btn" class="confirm-yes">Ja</button>
+            <button id="confirm-no-btn" class="confirm-no">Nein</button>
+        </div>
+    </div>
+
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, query, getDocs, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
         // Your provided Firebase configuration
         const firebaseConfig = {
@@ -484,6 +660,17 @@
         const userIdDisplay = document.getElementById('user-id-display');
         const messageBox = document.getElementById('message-box');
 
+        // Profile Management Modal Elements
+        const profileManagementModal = document.getElementById('profile-management-modal');
+        const managedProfilesList = document.getElementById('managed-profiles-list');
+        const doneManagingProfilesBtn = document.getElementById('done-managing-profiles-btn');
+
+        // Confirmation Modal Elements
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const confirmationMessage = document.getElementById('confirmation-message');
+        const confirmYesBtn = document.getElementById('confirm-yes-btn');
+        const confirmNoBtn = document.getElementById('confirm-no-btn');
+
         // Function to show messages in a custom box
         function showMessage(message, type = 'error') {
             messageBox.textContent = message;
@@ -499,6 +686,9 @@
             loginPage.classList.add('hidden');
             profileSelectionPage.classList.add('hidden');
             gameDisplayPage.classList.add('hidden');
+            // Hide modals when switching main pages
+            profileManagementModal.classList.add('hidden');
+            confirmationModal.classList.add('hidden');
             pageToShow.classList.remove('hidden');
         }
 
@@ -626,7 +816,6 @@
             showLoginForm();
         });
 
-
         // Function to load and display user profiles from Firestore
         async function loadUserProfiles(userId) {
             if (!isAuthReady || !userId) {
@@ -644,9 +833,6 @@
                 snapshot.forEach(doc => {
                     profiles.push({ id: doc.id, ...doc.data() });
                 });
-
-                // Removed the automatic creation of a "Main" profile.
-                // If profiles.length is 0, only the "Add Profile" card will be shown.
 
                 profiles.forEach(profile => {
                     const profileCard = document.createElement('div');
@@ -696,10 +882,131 @@
             });
         }
 
+        // Function to load and display profiles in the management modal
+        async function loadManagedProfiles() {
+            if (!isAuthReady || !currentUserId) {
+                showMessage("Sie müssen angemeldet sein, um Profile zu verwalten.", "error");
+                return;
+            }
+
+            const profilesCollectionRef = collection(db, `artifacts/${appId}/users/${currentUserId}/profiles`);
+            const querySnapshot = await getDocs(profilesCollectionRef); // Fetch current profiles once
+
+            managedProfilesList.innerHTML = ''; // Clear existing profiles in modal
+
+            querySnapshot.forEach(doc => {
+                const profile = { id: doc.id, ...doc.data() };
+                const managedProfileCard = document.createElement('div');
+                managedProfileCard.classList.add('managed-profile-card');
+                managedProfileCard.dataset.profileId = profile.id;
+
+                managedProfileCard.innerHTML = `
+                    <img src="${profile.avatar || `https://placehold.co/120x120/CCCCCC/000000?text=${profile.name}`}" alt="Profilbild ${profile.name}" class="rounded-md">
+                    <span class="profile-name-display">${profile.name}</span>
+                    <input type="text" class="edit-input hidden" value="${profile.name}">
+                    <div class="action-buttons mt-2">
+                        <button class="edit-btn">Bearbeiten</button>
+                        <button class="delete-btn">Löschen</button>
+                    </div>
+                `;
+
+                const editBtn = managedProfileCard.querySelector('.edit-btn');
+                const deleteBtn = managedProfileCard.querySelector('.delete-btn');
+                const profileNameDisplay = managedProfileCard.querySelector('.profile-name-display');
+                const editInput = managedProfileCard.querySelector('.edit-input');
+
+                // Edit button logic
+                editBtn.addEventListener('click', async () => {
+                    if (editBtn.textContent === 'Bearbeiten') {
+                        profileNameDisplay.classList.add('hidden');
+                        editInput.classList.remove('hidden');
+                        editInput.focus();
+                        editBtn.textContent = 'Speichern';
+                    } else { // Save button clicked
+                        const newName = editInput.value.trim();
+                        if (newName && newName !== profile.name) {
+                            try {
+                                const profileDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profiles`, profile.id);
+                                await updateDoc(profileDocRef, { name: newName });
+                                showMessage("Profilname aktualisiert!", "success");
+                            } catch (error) {
+                                console.error("Error updating profile name:", error);
+                                showMessage("Fehler beim Aktualisieren des Profilnamens.", "error");
+                            }
+                        }
+                        profileNameDisplay.textContent = newName;
+                        profileNameDisplay.classList.remove('hidden');
+                        editInput.classList.add('hidden');
+                        editBtn.textContent = 'Bearbeiten';
+                    }
+                });
+
+                // Delete button logic
+                deleteBtn.addEventListener('click', () => {
+                    showConfirmation("Möchten Sie dieses Profil wirklich löschen? Dies kann nicht rückgängig gemacht werden.", async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const profileDocRef = doc(db, `artifacts/${appId}/users/${currentUserId}/profiles`, profile.id);
+                                await deleteDoc(profileDocRef);
+                                showMessage("Profil erfolgreich gelöscht!", "success");
+                                // No need to manually remove from DOM, onSnapshot will refresh
+                            } catch (error) {
+                                console.error("Error deleting profile:", error);
+                                showMessage("Fehler beim Löschen des Profils.", "error");
+                            }
+                        }
+                    });
+                });
+
+                managedProfilesList.appendChild(managedProfileCard);
+            });
+        }
+
+        // Custom Confirmation Modal
+        let confirmCallback = null;
+        function showConfirmation(message, callback) {
+            confirmationMessage.textContent = message;
+            confirmCallback = callback;
+            confirmationModal.classList.remove('hidden');
+        }
+
+        confirmYesBtn.addEventListener('click', () => {
+            if (confirmCallback) {
+                confirmCallback(true);
+            }
+            confirmationModal.classList.add('hidden');
+            confirmCallback = null;
+        });
+
+        confirmNoBtn.addEventListener('click', () => {
+            if (confirmCallback) {
+                confirmCallback(false);
+            }
+            confirmationModal.classList.add('hidden');
+            confirmCallback = null;
+        });
+
+
         // Event-Listener für den "Profile verwalten" Button
         if (manageProfilesBtn) {
             manageProfilesBtn.addEventListener('click', () => {
-                showMessage('Die Funktion "Profile verwalten" ist noch nicht implementiert.', "info");
+                if (currentUserId) {
+                    loadManagedProfiles(); // Load profiles specifically for management
+                    profileManagementModal.classList.remove('hidden');
+                } else {
+                    showMessage("Bitte melden Sie sich zuerst an, um Profile zu verwalten.", "info");
+                }
+            });
+        }
+
+        // Event-Listener für den "Fertig" Button im Profilverwaltungs-Modal
+        if (doneManagingProfilesBtn) {
+            doneManagingProfilesBtn.addEventListener('click', () => {
+                profileManagementModal.classList.add('hidden');
+                // Reload main profiles list to reflect any changes
+                if (currentUserId) {
+                    loadUserProfiles(currentUserId);
+                }
             });
         }
 
