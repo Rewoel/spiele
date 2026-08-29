@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewoel - Premium Collection</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js für den 3D Hintergrund -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Google Fonts: Outfit für einen sehr modernen, cleanen Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        modern: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#e0e7ff',
+                            DEFAULT: '#6366f1',
+                            dark: '#3730a3',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: #030305; /* Tiefes Schwarz/Blau */
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Container für das 3D Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Klicks gehen durch das Canvas hindurch */
+        }
+
+        /* Glassmorphism Effekte */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030305;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3730a3;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6366f1;
+        }
+
+        /* Sanfte Einblend-Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Icon Gradient Backgrounds */
+        .icon-container {
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.15), rgba(255,255,255,0));
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-brand selection:text-white">
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="flex-1 w-full max-w-7xl mx-auto px-6 py-12 md:py-24 z-10 flex flex-col">
+        
+        <header class="text-center mb-16 fade-in" style="animation-delay: 0.2s;">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full glass-panel text-xs font-semibold tracking-widest uppercase text-brand-light">
+                Premium Collection
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-brand-light to-gray-400 drop-shadow-lg">
+                REWOEL
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl font-light max-w-2xl mx-auto">
+                Entdecke unsere handverlesene Auswahl an interaktiven Erlebnissen. 
+                Modernes Design trifft auf puren Spielspaß.
+            </p>
+        </header>
+
+        <div class="w-full max-w-xl mx-auto mb-16 fade-in" style="animation-delay: 0.4s;">
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none transition-colors group-focus-within:text-brand">
+                    <svg class="w-5 h-5 text-gray-500 group-focus-within:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <input type="text" id="searchInput" 
+                       class="w-full glass-panel text-white text-base rounded-2xl block pl-12 p-4 transition-all duration-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:bg-white/10" 
+                       placeholder="Finde dein Spiel...">
+            </div>
+        </div>
+
+        <div id="gamesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full pb-10">
+            <!-- Karten werden per JS gerendert -->
+        </div>
+        
+    </div>
+
+    <footer class="py-8 text-center w-full z-10 glass-panel border-b-0 border-l-0 border-r-0 mt-auto">
+        <p class="text-gray-500 text-sm font-light tracking-wide">&copy; 2026 REWOEL</p>
+    </footer>
+
+    <script>
+        // ----------------------------------------------------
+        // 1. SPIELDATEN
+        // ----------------------------------------------------
+        const games = [
+            { name: "Schach", url: "https://rewoel.github.io/schach/", icon: "♟️", desc: "Der strategische Klassiker" },
+            { name: "Kniffel", url: "https://rewoel.github.io/kniffel/", icon: "🎲", desc: "Würfelglück & Taktik" },
+            { name: "4 Gewinnt", url: "https://rewoel.github.io/4inarow/", icon: "🔴", desc: "Verbinde vier in einer Reihe" },
+            { name: "Klicker", url: "https://rewoel.github.io/klicker/", icon: "🖱️", desc: "Endloser Klick-Spaß" },
+            { name: "Memory", url: "https://rewoel.github.io/memory/", icon: "🧠", desc: "Trainiere dein Gedächtnis" },
+            { name: "Click of Death", url: "https://rewoel.github.io/clickofdeath/", icon: "💀", desc: "Nervenkitzel pur" },
+            { name: "4 Gewinnt V.2", url: "https://rewoel.github.io/4inarowmp/", icon: "🚀", desc: "Multiplayer Edition" },
+            { name: "Crowd Runner", url: "https://rewoel.github.io/crowdrunner/", icon: "🏃", desc: "Führe die Menge an" },
+            { name: "Jump & Run", url: "https://rewoel.github.io/jumpnrun/", icon: "🦘", desc: "Klassisches Plattform-Abenteuer" },
+            { name: "Craftle", url: "https://rewoel.github.io/craftle/", icon: "⛏️", desc: "Kombiniere & Erschaffe" },
+            { name: "Schere Stein Papier", url: "https://rewoel.github.io/ssp/", icon: "✂️", desc: "Das ultimative Duell" }
+        ];
+
+        const gamesGrid = document.getElementById('gamesGrid');
+        const searchInput = document.getElementById('searchInput');
+
+        // ----------------------------------------------------
+        // 2. UI RENDERING
+        // ----------------------------------------------------
+        function renderGames(filterText = "") {
+            gamesGrid.innerHTML = '';
+            
+            const filteredGames = games.filter(game => 
+                game.name.toLowerCase().includes(filterText.toLowerCase())
+            );
+
+            filteredGames.forEach((game, index) => {
+                const card = document.createElement('a');
+                card.href = game.url;
+                card.target = "_blank";
+                card.className = "glass-card rounded-3xl p-6 flex flex-col cursor-pointer no-underline fade-in group relative overflow-hidden";
+                card.style.animationDelay = `${0.4 + (0.1 * index)}s`; // Gestaffelte Animation
+                
+                // Dekorativer Glow-Effekt innerhalb der Karte
+                const glow = document.createElement('div');
+                glow.className = "absolute -top-20 -right-20 w-40 h-40 bg-brand/20 rounded-full blur-3xl group-hover:bg-brand/40 transition-colors duration-500 pointer-events-none";
+                card.appendChild(glow);
+
+                card.innerHTML += `
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="icon-container w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shadow-lg">
+                                ${game.icon}
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-all text-gray-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </div>
+                        </div>
+                        <h2 class="text-xl font-bold text-white mb-2 tracking-wide">${game.name}</h2>
+                        <p class="text-gray-400 text-sm font-light mt-auto">${game.desc}</p>
+                    </div>
+                `;
+
+                gamesGrid.appendChild(card);
+            });
+
+            if (filteredGames.length === 0) {
+                gamesGrid.innerHTML = `
+                    <div class="col-span-full text-center py-16 fade-in">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-4 text-2xl">🔍</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Keine Spiele gefunden</h3>
+                        <p class="text-gray-500">Versuche einen anderen Suchbegriff.</p>
+                    </div>
+                `;
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            renderGames(e.target.value);
+        });
+
+        renderGames();
+
+        // ----------------------------------------------------
+        // 3. THREE.JS 3D PARTIKEL HINTERGRUND
+        // ----------------------------------------------------
+        const canvas = document.getElementById('bg-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance Optimierung
+
+        const scene = new THREE.Scene();
+        // Fog für Tiefe
+        scene.fog = new THREE.FogExp2(0x030305, 0.0015);
+
+        const camera = new THREE.PerspectiveCamera(75, width / height, 1, 2000);
+        camera.position.z = 400;
+
+        // Partikel generieren
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500; // Anzahl der Sterne/Partikel
+        
+        const posArray = new Float32Array(particlesCount * 3);
+        const colorsArray = new Float32Array(particlesCount * 3);
+
+        const color1 = new THREE.Color(0x6366f1); // Indigo / Brand color
+        const color2 = new THREE.Color(0x0ea5e9); // Light blue
+        const color3 = new THREE.Color(0xffffff); // White
+
+        for(let i = 0; i < particlesCount * 3; i+=3) {
+            // Verteilung im Raum
+            posArray[i] = (Math.random() - 0.5) * 2000;     // x
+            posArray[i+1] = (Math.random() - 0.5) * 2000;   // y
+            posArray[i+2] = (Math.random() - 0.5) * 2000;   // z
+
+            // Zufällige Farben für jeden Partikel
+            const mixRatio = Math.random();
+            let finalColor;
+            if (mixRatio < 0.4) finalColor = color1;
+            else if (mixRatio < 0.8) finalColor = color2;
+            else finalColor = color3;
+
+            colorsArray[i] = finalColor.r;
+            colorsArray[i+1] = finalColor.g;
+            colorsArray[i+2] = finalColor.b;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
+
+        // Material für die Partikel (Glow-Effekt durch Additive Blending)
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 4,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 0.8,
+            sizeAttenuation: true
+        });
+
+        // Ein kreisförmiges Partikel-Objekt (Trick ohne externe Textur)
+        const canvasTexture = document.createElement('canvas');
+        canvasTexture.width = 16; canvasTexture.height = 16;
+        const context = canvasTexture.getContext('2d');
+        const gradient = context.createRadialGradient(8, 8, 0, 8, 8, 8);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(1, 'rgba(255,255,255,0)');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, 16, 16);
+        const texture = new THREE.CanvasTexture(canvasTexture);
+        particlesMaterial.map = texture;
+
+        const particleMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particleMesh);
+
+        // Maus-Interaktion
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        // Animations Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Partikel langsam rotieren lassen
+            particleMesh.rotation.y = elapsedTime * 0.05;
+            particleMesh.rotation.x = elapsedTime * 0.02;
+
+            // Sanfte Kamera-Bewegung basierend auf Maus (Parallax)
+            targetX = mouseX * 0.1;
+            targetY = mouseY * 0.1;
+            
+            camera.position.x += (targetX - camera.position.x) * 0.02;
+            camera.position.y += (-targetY - camera.position.y) * 0.02;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        // Resize Event Handling
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            
+            renderer.setSize(width, height);
+            // Re-calculate window halfs for mouse tracking
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+        });
+
+        // Starte Animation
+        animate();
+
+    </script>
+</body>
+</html>
